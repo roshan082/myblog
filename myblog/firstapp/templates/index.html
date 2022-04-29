@@ -8,5 +8,16 @@
 </head>
 <body>
     <h1>This is a demo page.</h1>
+    <form action="#">
+        {% csrf_token %}
+        
+        {% comment %} {{ }}  tag is use to call variable 
+        {% %} tag is use to write certain python code
+        {% endcomment %}
+        
+        {{ form.as_p}}
+        {% comment %} as_p means the input tag as paragraph {% endcomment %}
+        <input type="submit" value="Register">
+    </form>
 </body>
 </html>
