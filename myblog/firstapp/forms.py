@@ -1,5 +1,3 @@
-
-from dataclasses import fields
 from django.db import models
 from django import forms
 from firstapp.models import BlogAppUser
@@ -15,4 +13,4 @@ class UserRegisterForm(forms.ModelForm):
 #__all__ --> generates form of all fields given in the model
 # selective field --> we need to define tuple
 # eg: 
-#   fields = ('first_name', 'middle_name', 'last_name', 'emial', 'contact', 'profile' )
+#   fields = ('first_name', 'middle_name', 'last_name', 'emial', 'contact', 'profile_image' )
