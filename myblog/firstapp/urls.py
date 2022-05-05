@@ -4,9 +4,10 @@
 # 3. name --> name = "<url_name>" -- this is optional
 
 
-from django.urls import path, include
+from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('',views.demo, name = 'demo')
+    path('',views.demo, name = 'demo'),
+    path('register/', views.register, name= 'user.register'),
 ]
