@@ -7,7 +7,7 @@ class UserRegisterForm(forms.ModelForm):
     class Meta:
         model = BlogAppUser
         #fields = "__all__"
-        fields = ('first_name', 'middle_name', 'last_name', 'email', 'contact', 'profile_image')
+        fields = ('first_name', 'middle_name', 'last_name', 'email', 'contact', 'password', 'profile_image')
 
 
 #__all__ --> generates form of all fields given in the model

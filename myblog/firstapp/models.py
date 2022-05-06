@@ -15,7 +15,7 @@ class AppUser(models.Model):
 
 class BlogAppUser(models.Model):
     first_name = models.CharField(max_length=50)
-    middle_name = models.CharField(max_length=50, null=True)
+    middle_name = models.CharField(max_length=50, null=True, blank=True)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
     contact = models.CharField(max_length=15,null=True)
