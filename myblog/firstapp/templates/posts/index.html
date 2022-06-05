@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POST | List</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="card">
+                <div class="d-inline-flex card-header">
+                    <h1>POST List</h1>
+                    <a href="{% url 'posts.create' %}" class="btn btn-primary" style="margin-left: 750px">Add New Post</a>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <td>S.No</td>
+                                <td>Title</td>
+                                <td>Description</td>
+                                <td>Slug</td>
+                                <td>Status</td>
+                                <td>Post Image</td>
+                                <td>Date</td>
+                                <td>Action</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for post in posts %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td> 
+                                <td>{{ post.post_title }}</td>
+                                <td>{{ post.post_description }}</td>
+                                <td>{{ post.slug }}</td>
+                                <td>{{ post.post_status }}</td>
+                                <td>{{ post.post_image }}</td>
+                                <td>{{ post.created_at }}</td>
+                                <td>
+                                    <a href="{% url 'posts.edit' post.id %}"><i class="fas fa-edit"></i></a>
+                                    <a href="{% url 'posts.show' post.id %}"><i class="fas fa-eye"></i></a>
+                                    <a href="{% url 'posts.delete' post.id %}"><i class="far fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

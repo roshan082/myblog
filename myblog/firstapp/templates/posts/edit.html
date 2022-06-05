@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POST | Edit</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="card">
+                <div class="d-inline-flex card-header">
+                    <h1>Create New Post</h1>
+                    <a href="{% url 'posts.index' %}" class="btn btn-primary" style="margin-left: 700px">Back</a>
+                </div>
+                <div class="card-body">
+                    {% if success %}
+                        <div class="alert alert-success" role="alert">
+                            {{ success }}
+                        </div>
+                    {% endif %}
+                    <form action="{% url 'posts.update' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="post_id" value="{{ post.id }}">
+                        <div class="form-group">
+                            <label for="post_title" class="m-3">Post Title: </label>
+                            <input type="text" name="post_title" value="{{ post.post_title }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="post_description" class="m-3">Post Description: </label>
+                            <input type="text" name="post_description" value="{{ post.post_description }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="slug" class="m-3">Post Slug: </label>
+                            <input type="text" name="slug" value="{{ post.slug }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="post_image" class="m-3">Post Image: </label>
+                            <input type="text" name="post_image" value="{{ post.post_image }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="post_status" class="m-3">Post Status: </label>
+                            <input type="text" name="post_status" value="{{ post.post_status }}" class="form-control">
+                        </div>
+                        <input type="submit" value="Update" class="btn btn-primary mt-3">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>    
+</body>
+</html>
