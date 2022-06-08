@@ -57,53 +57,98 @@ def post_create(request):
         return render(request, template, context)
 
 def post_index(request):
-    template = "posts/index.html"
-    posts = BlogPost.objects.all() # this all() function returns all created posts from database
-    context = {'posts': posts}
-    return render(request, template, context)
+    if request.session.has_key('session_email'):
+        template = "posts/index.html"
+        posts = BlogPost.objects.all() # this all() function returns all created posts from database
+        context = {'posts': posts}
+        return render(request, template, context)
+    else:
+        form = UserLoginForm
+        context = {
+            'form' : form,
+            'error_msg' : 'Access Forbidden. First Login to the system.'
+        }
+        template = "users/login.html"
+        return render(request, template, context)
 
 def post_edit(request, post_id):
-    template = "posts/edit.html"
-    post = BlogPost.objects.get(id=post_id)
-    context = {'post': post}
-    return render(request, template, context)
+    if request.session.has_key('session_email'):
+        template = "posts/edit.html"
+        post = BlogPost.objects.get(id=post_id)
+        context = {'post': post}
+        return render(request, template, context)
+    else:
+        form = UserLoginForm
+        context = {
+            'form' : form,
+            'error_msg' : 'Edit Access Forbidden. First Login to the system.'
+        }
+        template = "users/login.html"
+        return render(request, template, context)
 
 def post_show(request, post_id):
-    template = "posts/show.html"
-    post = BlogPost.objects.get(id=post_id)
-    context = {'post': post}
-    return render(request, template, context)
+    if request.session.has_key('session_email'):
+        template = "posts/show.html"
+        post = BlogPost.objects.get(id=post_id)
+        context = {'post': post}
+        return render(request, template, context)
+    else:
+        form = UserLoginForm
+        context = {
+            'form' : form,
+            'error_msg' : 'Access Forbidden. First Login to the system.'
+        }
+        template = "users/login.html"
+        return render(request, template, context)
 
 def post_update(request):
-    template = "posts/edit.html"
-    post_form = PostCreateForm
-    context = {'form': post_form}
-    if request.method == 'POST':
-        obj_post = BlogPost.objects.get(id=request.POST.get('post_id'))
-        obj_post.post_title = request.POST.get('post_title')
-        obj_post.post_description = request.POST.get('post_description')
-        obj_post.post_image = request.POST.get('post_image')
-        obj_post.post_status = request.POST.get('post_status')
-        obj_post.slug = request.POST.get('slug')
-        obj_post.save()
+    if request.session.has_key('session_email'):
+        template = "posts/edit.html"
+        post_form = PostCreateForm
+        context = {'form': post_form}
+        if request.method == 'POST':
+            obj_post = BlogPost.objects.get(id=request.POST.get('post_id'))
+            obj_post.post_title = request.POST.get('post_title')
+            obj_post.post_description = request.POST.get('post_description')
+            obj_post.post_image = request.POST.get('post_image')
+            obj_post.post_status = request.POST.get('post_status')
+            obj_post.slug = request.POST.get('slug')
+            obj_post.save()
 
-        context.setdefault('success', 'Successfully Updated !!!')
-        context.setdefault('post', obj_post)
-        return render(request, template, context)
-        # return redirect(template)
+            context.setdefault('success', 'Successfully Updated !!!')
+            context.setdefault('post', obj_post)
+            return render(request, template, context)
+            # return redirect(template)
+        else:
+            return render(request, template, context)
     else:
+        form = UserLoginForm
+        context = {
+            'form' : form,
+            'error_msg' : 'Update Access Forbidden. First Login to the system.'
+        }
+        template = "users/login.html"
         return render(request, template, context)
 
 def post_delete(request, post_id):
-    template = "/posts/"
-    # selecting data by object id to delete from database
-    post = BlogPost.objects.get(id=post_id)
-    post.delete()
+    if request.session.has_key('session_email'):
+        template = "/posts/"
+        # selecting data by object id to delete from database
+        post = BlogPost.objects.get(id=post_id)
+        post.delete()
 
-    # selecting all data to return to index
-    posts = BlogPost.objects.all()
-    context = {'posts' : posts}
-    return redirect(template)
+        # selecting all data to return to index
+        posts = BlogPost.objects.all()
+        context = {'posts' : posts}
+        return redirect(template)
+    else:
+        form = UserLoginForm
+        context = {
+            'form' : form,
+            'error_msg' : 'Delete Access Forbidden. First Login to the system.'
+        }
+        template = "users/login.html"
+        return render(request, template, context)
 
 def post_search(request):
     template = "posts/index.html"
@@ -118,6 +163,20 @@ def user_show(request, id):
 def user_edit(request, id):
     return render(request)
 
+def user_dashboard(request):
+    if request.session.has_key('session_email'):
+        template = "index.html"
+        context = {'success_msg' : 'Welcome ' + request.session['session_email']}
+        return render(request, template, context)
+    else:
+        form = UserLoginForm
+        context = {
+            'form' : form,
+            'error_msg' : 'Access Forbidden. First Login to the system.'
+        }
+        template = "users/login.html"
+        return render(request, template, context)
+
 def user_login(request):
     form = UserLoginForm
     if request.method == "POST":
@@ -125,8 +184,24 @@ def user_login(request):
             users = BlogAppUser.objects.get(email=request.POST.get('email'))
             if request.POST.get('password') == users.password:
                 template = "index.html"
-                context = {'success_msg' : 'Welcome to your blog..' }
-                return render(request, template,context)
+                # storing seession with session key 'session_email'
+                request.session['session_email'] = users.email
+
+                # checking session key-value
+                if request.session.has_key('session_email'):
+                    
+                    # accessing session data
+                    context = {
+                        'success_msg' : 'Welcome ' + request.session['session_email']
+                    }
+                    return render(request, template, context)
+                else:
+                    context = {
+                        'form': form,
+                        'error_msg': 'Access Forbidden'
+                    }
+                    template = "users/login.html"
+                    return render(request, template,context)
             else:
                 context = {
                     'form': form,
@@ -146,3 +221,14 @@ def user_login(request):
         template = "users/login.html"
         return render(request, template, context)
 
+def user_logout(request):
+    if request.session.has_key('session_email'):
+        # destroying the session in order to logout user from the system
+        del request.session['session_email']
+        form = UserLoginForm
+        context = {
+            'form' : form,
+            'error_msg' : 'You are logged out of the system..'
+        }
+        template = "users/login.html"
+        return render(request, template, context)

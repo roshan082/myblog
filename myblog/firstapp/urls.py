@@ -13,6 +13,8 @@ urlpatterns = [
     path('edit/<int:id>/', views.user_edit, name='user.edit'),
     path('show/<int:id>/', views.user_show, name='user.show'),
     path('login/', views.user_login, name='user.login'),
+    path('dashboard/', views.user_dashboard, name='user.dashboard'),
+    path('logout/', views.user_logout, name='user.logout'),
 
 
     # CRUD
