@@ -1,7 +1,11 @@
+import random
 from django.shortcuts import redirect, render
 from firstapp.forms import PostCreateForm, UserLoginForm, UserRegisterForm
 from firstapp.models import BlogAppUser, BlogPost
 
+# package for sending email
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 def demo(request): # request parameter is mandatory in every function in django because this is a client site application.
@@ -19,7 +23,6 @@ def demo(request): # request parameter is mandatory in every function in django 
 def register(request):
     urf = UserRegisterForm
     template = 'users/create.html'
-    context = {'form': urf}
     if request.method == 'POST':
         user = BlogAppUser()
         user.first_name = request.POST.get('first_name')
@@ -29,13 +32,30 @@ def register(request):
         user.contact = request.POST.get('contact')
         user.password = request.POST.get('password')
         user.profile_image = request.POST.get('profile_image')
+        user.verification_code = str(random.randrange(100000, 999999))
         user.save()
 
-        context.setdefault('success', 'Congratulation your data are registerd successfully !!!')
-        
+        # sending email code
+        subject = 'Email Verification'
+        message = f'Your verifcation code is : {user.verification_code}'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [user.email]
+
+        send_mail(subject, message, email_from, recipient_list)
+
+
+        context = {
+            'form' : urf,
+            'success' : 'Congratulation your account is registerd successfully !!!',
+            'user' : user
+        }
         return render(request, template, context)
 
     else:
+        context = {
+            'form' : urf,
+            'msg' : 'Note:- Please fill up all the required informations..'
+        }
         return render(request, template, context)
 
 def post_create(request):

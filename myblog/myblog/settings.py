@@ -134,4 +134,11 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+# SMTP configuration to send email
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # django package
+EMAIL_HOST = 'smtp.gmail.com' # email server
+EMAIL_USE_TLS = True # protocol -> to encrypt data while sending email
+EMAIL_PORT = 587 # port number
+EMAIL_HOST_USER = 'roshansth11@gmail.com' # email address from which we want to send email
+EMAIL_HOST_PASSWORD = 'uccqibvprsmpcurh' # gamil app password
